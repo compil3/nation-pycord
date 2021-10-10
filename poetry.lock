@@ -87,6 +87,20 @@ reference = "master"
 resolved_reference = "707f3ab5e4adbb2d5bd56778cdcf3789a651abc3"
 
 [[package]]
+name = "pycordutils"
+version = "0.0.2"
+description = "A Useful Utility Library made to be used with pycord"
+category = "main"
+optional = false
+python-versions = ">= 3.6"
+
+[package.dependencies]
+py-cord = "*"
+
+[package.extras]
+voice = ["py-cord", "youtube-dl"]
+
+[[package]]
 name = "pymongo"
 version = "3.12.0"
 description = "Python driver for MongoDB <http://www.mongodb.org>"
@@ -138,7 +152,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "6b1cb63e2ddec9efaf1bbe33891766dd98fc5197d132ad6702f3fb41560ee467"
+content-hash = "737eca9141ae111d183344a165f33f5e1e9c0440602ad39aa28e5a02d465450c"
 
 [metadata.files]
 aiohttp = [
@@ -271,6 +285,9 @@ multidict = [
     {file = "multidict-5.2.0.tar.gz", hash = "sha256:0dd1c93edb444b33ba2274b66f63def8a327d607c6c790772f448a53b6ea59ce"},
 ]
 py-cord = []
+pycordutils = [
+    {file = "PycordUtils-0.0.2.tar.gz", hash = "sha256:89b05e2122a075e218f83e6de578f256bc5cbbbb5ed04675dbd7b009abe1c67a"},
+]
 pymongo = [
     {file = "pymongo-3.12.0-cp27-cp27m-macosx_10_14_intel.whl", hash = "sha256:072ba7cb65c8aa4d5c5659bf6722ee85781c9d7816dc00679b8b6f3dff1ddafc"},
     {file = "pymongo-3.12.0-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:d6e11ffd43184d529d6752d6dcb62b994f903038a17ea2168ef1910c96324d26"},

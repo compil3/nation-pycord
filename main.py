@@ -13,6 +13,11 @@ from discord.ext.commands.help import MinimalHelpCommand
 from dotenv import load_dotenv
 from discord.ext import commands
 
+#Working Cogs
+# https://github.com/naoTimesdev/pycord.git
+
+#Py-Cord Slash
+# https://github.com/Pycord-Development/pycord@feature/slash
 
 start = time.perf_counter()
 guilds_id = [
@@ -22,7 +27,7 @@ guilds_id = [
 
 class Manager(commands.Bot):
     def __init__(self):
-        
+
         super().__init__(
             command_prefix="?",
             intents=discord.Intents.all(),
