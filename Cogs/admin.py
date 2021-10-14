@@ -24,10 +24,11 @@ class Admin(commands.Cog):
     )
     @commands.has_permissions(kick_members=True)
     async def reload(self, ctx):
+        await ctx.defer(ephemeral=True)
+
         if ctx.author.id != 111252573054312448:
             return
 
-        await ctx.defer()
         embed = discord.Embed(title="Reloading all cogs!", color=0x808080)
         for ext in os.listdir("./Cogs"):
             if ext.endswith(".py") and not ext.startswith(("_")):
@@ -42,7 +43,7 @@ class Admin(commands.Cog):
                     )
                     logging.error(e)
                 await asyncio.sleep(0, 5)
-        await ctx.respond(embed=embed)
+        await ctx.respond(embed=embed, ephemeral=True)
 
     @slash_command(
         name="load", guild_ids=settings.GUILD_IDS, description="Loads a Cog."
