@@ -1,6 +1,10 @@
 import discord
-import logging
+from discord import channel
 from discord.ext import commands
+
+import settings
+import logging
+
 from re import compile as re_compile
 
 
@@ -11,11 +15,15 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.Command):
         if isinstance(error, commands.CommandNotFound):
-            await ctx.send(f'{ctx.author.mention} the command is not found.', delete_after=3)
-            return            
+            await ctx.send(
+                f"{ctx.author.mention} the command is not found.", delete_after=3
+            )
+            return
         if isinstance(error, commands.DisabledCommand):
-            await ctx.send(f'{ctx.author.mention} the command is disabled', delete_after=3)
-            return            
+            await ctx.send(
+                f"{ctx.author.mention} the command is disabled", delete_after=3
+            )
+            return
         if isinstance(error, commands.CommandError):
             raise error
         await ctx.send(
@@ -36,15 +44,19 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.author.bot:
-            return
-        if (
-            message.author.id != self.bot.user.id
-            and message.channel.id == 854348564444741682
-        ):
-            await message.delete()
-        else:
-            await self.bot.process_commands(message)
+        try:
+            if message.channel.type.name == "private":
+                return
+            elif message.channel.type.name == "text":
+                if (
+                    message.author.get_role(842505724458172467)
+                    or message.author.id is self.bot.user.id
+                ):
+                    await self.bot.process_commands(message)
+                else:
+                    await message.delete()
+        except Exception as e:
+            print(e)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message):
