@@ -146,3 +146,8 @@ pycord-env/Scripts/deactivate.bat
 .env
 requirements.txt
 .vscode/sftp.json
+Cogs/__pycache__/admin.cpython-310.pyc
+Cogs/__pycache__/botevents.cpython-310.pyc
+Cogs/__pycache__/verification.cpython-310.pyc
+Cogs/Extensions/mongo.py
+Logs/bot.log.1
