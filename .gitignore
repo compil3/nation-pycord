@@ -143,3 +143,4 @@ pycord-env/Scripts/activate
 pycord-env/Scripts/activate.bat
 pycord-env/Scripts/Activate.ps1
 pycord-env/Scripts/deactivate.bat
+.env
