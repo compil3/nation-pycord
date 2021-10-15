@@ -1,14 +1,11 @@
 import discord
-from discord import interactions
 from discord.ext import commands
-from discord.app.commands import SlashCommand, slash_command
+from discord.app.commands import slash_command
 
-import logging, datetime, os, requests
+import logging, datetime
 from dotenv.main import load_dotenv
 from os import environ
-from pymongo.message import delete
 
-from pymongo import MongoClient
 from .Extensions.paging import PaginatorView
 import motor.motor_asyncio as motor
 
@@ -17,9 +14,7 @@ import motor.motor_asyncio as motor
 load_dotenv(".env")
 PASS = environ.get("MONGO_BOT_PASS")
 print(PASS)
-# cluster = MongoClient(
-#     f"mongodb+srv://pcn_bot:{PASS}@cluster0.bhwnp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-# )
+
 cluster = motor.AsyncIOMotorClient(f"{environ.get('CONNECTION')}")
 db = cluster["Nation"]
 collection = db["verification"]
@@ -34,8 +29,10 @@ class Verification(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # TODO: Fix up all the queries
 
+
+    # TODO: Fix up all the queries to use motor
+    
     @slash_command(
         name="add",
         description="Add your Gamer-tag to the verification queue",
@@ -117,13 +114,12 @@ class Verification(commands.Cog):
     )
     @commands.has_permissions(kick_members=True)
     async def queue(self, ctx):
-        print("Entered queue command")
         await ctx.defer(ephemeral=True)
 
         embeds = []
-        result = collection.find({"status": "In Queue"})
+        result= collection.find({"status": "In Queue"})
         embed = discord.Embed(color=ctx.author.color)
-        for user in result:
+        for user in await result.to_list(length=100):
             embed = discord.Embed(
                 title="PCN Discord Queue System",
                 description=f"Gamer tag: ```{user['gamertag']}```",
@@ -134,7 +130,8 @@ class Verification(commands.Cog):
             embed.add_field(name="Status", value=user["status"], inline=True)
             embed.add_field(name="Reason", value=user["reason"], inline=True)
             embed.add_field(name="Updated", value=user["updated"], inline=False)
-            embed.set_footer(text=f"Discord ID: {user['discord_id']}")
+            footer = f"Discord ID: {str(user['discord_id'])}"
+            embed.set_footer(text=f"Discord ID: {str(user['discord_id'])}")
             embeds.append(embed)
         try:
             view = PaginatorView(embeds, ctx)
@@ -144,6 +141,7 @@ class Verification(commands.Cog):
         except Exception as e:
             print(e)
 
+    # TODO: add mod/admin that approved user to db.
     @commands.has_permissions(kick_members=True)
     @slash_command(
         name="approve", description="Approve member application", guild_id=guild_id
@@ -179,6 +177,7 @@ class Verification(commands.Cog):
         except Exception as e:
             print(e)
 
+    # TODO: add mod/admin that denied user
     @commands.has_permissions(kick_members=True)
     @slash_command(
         name="deny", description="Deny member application", guild_ids=guild_id
@@ -190,6 +189,7 @@ class Verification(commands.Cog):
         now = datetime.datetime.now()
         tstamp = now.strftime(format)
 
+
         if collection.find({"discord_name": _user}).count() < 1:
             await ctx.respond(f"{member.name} not found.  Please try again.")
         else:
@@ -199,6 +199,6 @@ class Verification(commands.Cog):
             )
             await ctx.respond(f"{member.name} updated.")
 
-
+    # TODO: create a user look up for mods/admins to check if/when a member was verified.
 def setup(bot):
     bot.add_cog(Verification(bot))

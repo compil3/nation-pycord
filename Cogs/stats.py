@@ -1,11 +1,14 @@
 import logging
+from discord.app.context import ApplicationContext
 import requests
 import re
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import MissingPermissions
 from discord.app.commands import slash_command, user_command
 from discord.app import Option
+
 
 from .Extensions.paging import PaginatorView
 
@@ -28,6 +31,8 @@ collection = db["registered"]
 class Stats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+
 
     @commands.has_role("Player")
     @slash_command(

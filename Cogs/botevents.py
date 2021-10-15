@@ -1,6 +1,8 @@
 import discord
 from discord import channel
 from discord.ext import commands
+from discord.ext.commands.errors import MissingPermissions, MissingRole
+from discord.app.commands import slash_command
 
 import settings
 import logging
@@ -12,20 +14,24 @@ class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, error: commands.Command):
+    async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             await ctx.send(
                 f"{ctx.author.mention} the command is not found.", delete_after=3
             )
-            return
-        if isinstance(error, commands.DisabledCommand):
+        elif isinstance(error, commands.DisabledCommand):
             await ctx.send(
                 f"{ctx.author.mention} the command is disabled", delete_after=3
             )
-            return
-        if isinstance(error, commands.CommandError):
+        elif isinstance(error, commands.CommandError):
             raise error
+        elif isinstance(error, commands.MissingRole):
+            raise error        
+        elif isinstance(error, commands.MissingPermissions):
+            raise error
+
         await ctx.send(
             embed=discord.Embed(
                 title=" ".join(
@@ -35,6 +41,22 @@ class Events(commands.Cog):
                 color=discord.Color.red(),
             )
         )
+
+        @self.bot.event
+        async def on_command_error(ctx, error):
+            if isinstance(error, commands.MissingPermissions):
+                raise error
+            elif isinstance(error, commands.MissingRole):
+                raise error
+            await ctx.send(
+                embed=discord.Embed(
+                    title=" ".join(
+                        re_compile(r"[A-Z][a-z]*").findall(error.__class__.__name__)
+                    ),
+                    description=str(error),
+                    color=discord.Color.red(),
+                )
+            )
         # logging.error(f"ERR THROWN:\n {re_compile(r"[A-Z][a-z]*").findall(error.__class__.__name__))
 
         # if isinstance(error, commands.MissingRequiredArgument):

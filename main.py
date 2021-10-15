@@ -1,3 +1,5 @@
+from abc import ABC
+
 import discord
 from discord.ext.commands.help import MinimalHelpCommand
 from discord.ext import commands
@@ -13,40 +15,41 @@ from os import environ, listdir
 import logging
 from logging.handlers import RotatingFileHandler
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 
 from pymongo import MongoClient
 
 import motor.motor_asyncio as motor
 from Cogs.Extensions.mongo import Document
 
-#Working Cogs
+# Working Cogs
 # https://github.com/naoTimesdev/pycord.git
 
-#Py-Cord Slash
+# Py-Cord Slash
 # https://github.com/Pycord-Development/pycord@feature/slash
 
 start = time.perf_counter()
 guilds_id = [
     689119429375819951,
 ]
+token = os.getenv('KEY')
+print(token)
 
 
-class Manager(commands.Bot):
+class Manager(commands.Bot, ABC):
     def __init__(self):
 
         super().__init__(
             command_prefix="?",
             intents=discord.Intents.all(),
-            owner_ids=[111252573054312448,],
+            owner_ids=[111252573054312448, ],
             help_command=commands.MinimalHelpCommand(),
             allow_mentions=discord.AllowedMentions.none(),
             activity=discord.Activity(
                 type=discord.ActivityType.playing,
-                name="Bug squasher.",
+                name="Alpha Building.",
             ),
         )
-
         if os.path.exists("./Logs") is False:
             os.makedirs("./Logs")
         elif os.path.exists("./Logs/bot.log"):
@@ -73,18 +76,15 @@ class Manager(commands.Bot):
                     print(e)
 
     async def on_ready(self):
-        h_name= socket.gethostname()
-        ip_addr = socket.gethostbyname(h_name)
         if platform == "linux" or platform == "linux2":
             os.system("clear")
             print("--Pro Clubs Nation Bot v1.0---")
             print(
-                f"Logged in as {self.user} ID:{self.user.id} after {round(time.perf_counter() - start,2)} seconds"
+                f"Logged in as {self.user} ID:{self.user.id} after {round(time.perf_counter() - start, 2)} seconds"
             )
             logging.info(
                 f"Logged in as {self.user} ID:{self.user.id} after {round(time.perf_counter() - start, 2)} seconds"
             )
-            print(f"Hostname is: {h_name}\nIP Addr: {ip_addr}")
             # print(f"{environ.get('CONNECTION')}")
         elif platform == "win32":
             os.system("cls")
@@ -93,11 +93,11 @@ class Manager(commands.Bot):
                 f"Logged in as {self.user} ID:{self.user.id} after {round(time.perf_counter() - start, 1)} seconds"
             )
             logging.info(
-                f"Logged in as {self.user} ID: {self.user.id} after {round(time.perf_counter() - start,1)} seconds"
+                f"Logged in as {self.user} ID: {self.user.id} after {round(time.perf_counter() - start, 1)} seconds"
             )
-            print(f"Hostname is: {h_name}\nIP Addr: {ip_addr}")
             # print(f"{environ.get('CONNECTION')}")
+
 
 bot = Manager()
 load_dotenv(".env")
-bot.run(environ.get("TOKEN"))
+bot.run(os.getenv('KEY'))
