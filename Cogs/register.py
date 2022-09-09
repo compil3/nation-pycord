@@ -47,13 +47,14 @@ class Register(commands.Cog):
                 reg_date = current_time.strftime(format)
                 post = {
                     "_id": ctx.author.id,
-                    "discord_full_name": ctx.author.name +"#"+ ctx.author.discriminator,
+                    "discord_full_name": f"{ctx.author.name}#{ctx.author.discriminator}",
                     "registered_gamer_tag": gamertag,
                     "gamer_tag_url": default_player_url.format(gamertag),
-                    "date_registered": reg_date
+                    "date_registered": reg_date,
                 }
+
                 await collection.insert_one(post)
-                _status = f"Gamertag successfully registered."
+                _status = "Gamertag successfully registered."
             embed = discord.Embed(title="Registration System", description=_status)
             embed.set_author(name=f"{gamertag} Link", url=default_player_url.format(gamertag), icon_url="https://proclubsnation.com/wp-content/uploads/2020/08/PCN_logo_Best.png")
             embed.add_field(name="Gamertag", value=gamertag, inline=False)

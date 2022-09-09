@@ -23,11 +23,8 @@ class Tables(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def get_leagues(session):
-        tasks = []
-        for league in competitions:
-            tasks.append(session.get(tables.format(league), ssl=False))
-        return tasks
+    def get_leagues(self):
+        return [self.get(tables.format(league), ssl=False) for league in competitions]
 
     async def get_tables(self, mobile):
         embeds = []
@@ -54,9 +51,6 @@ class Tables(commands.Cog):
                                 + str(index[0]["data"][table_position]["name"])
                                 + "\n"
                             )
-                            team_points.append(
-                                str(index[0]["data"][table_position]["pts"]) + "\n"
-                            )
                         else:
                             team_standing.append(
                                 str(index[0]["data"][table_position]["pos"])
@@ -66,16 +60,16 @@ class Tables(commands.Cog):
                                 + str(index[0]["data"][table_position]["pts"])
                                 + "\n"
                             )
-                            team_points.append(
-                                str(index[0]["data"][table_position]["pts"]) + "\n"
-                            )
-                team_ranking = " ".join(team_standing)
-                team_pts = " ".join(team_points)
+                        team_points.append(
+                            str(index[0]["data"][table_position]["pts"]) + "\n"
+                        )
                 embed.set_author(name=f"{league_name}", url=index[0]["link"])
                 if mobile == True:
                     embed.add_field(name="Rank - Pts", value=team_standing, inline=True)
                 else:
+                    team_ranking = " ".join(team_standing)
                     embed.add_field(name="Rank", value=team_ranking, inline=True)
+                    team_pts = " ".join(team_points)
                     embed.add_field(name="Pts", value=team_pts, inline=True)
 
                 embeds.append(embed)
