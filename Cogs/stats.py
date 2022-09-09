@@ -63,7 +63,7 @@ class Stats(commands.Cog):
                     return
             except Exception as e:
                 logging.ERROR(e)
-        elif gamertag is not None:
+        else:
             if " " in gamertag:
                 gamertag = gamertag.replace(" ", "-")
             try:

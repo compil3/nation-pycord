@@ -51,9 +51,6 @@ class Manager(commands.Bot):
             os.makedirs("./Logs")
         elif os.path.exists("./Logs/bot.log"):
             os.remove("./Logs/bot.log")
-        else:
-            pass
-
         logging.basicConfig(
             handlers=[
                 RotatingFileHandler("./Logs/bot.log", maxBytes=5000000, backupCount=3)
@@ -75,7 +72,7 @@ class Manager(commands.Bot):
     async def on_ready(self):
         h_name= socket.gethostname()
         ip_addr = socket.gethostbyname(h_name)
-        if platform == "linux" or platform == "linux2":
+        if platform in ["linux", "linux2"]:
             os.system("clear")
             print("--Pro Clubs Nation Bot v1.0---")
             print(

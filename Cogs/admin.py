@@ -52,9 +52,7 @@ class Admin(commands.Cog):
     async def load(self, ctx, *, module):
         try:
             if ".py" not in module:
-                module = module + ".py"
-            else:
-                pass
+                module = f"{module}.py"
             self.bot.load_extension(f"Cogs.{module[:-3]}")
             e = discord.Embed(description=f"``{module}`` has been loaded.")
             await ctx.respond(embed=e, delete_after=3)

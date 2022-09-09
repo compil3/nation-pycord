@@ -51,7 +51,7 @@ class Verification(commands.Cog):
                 url="https://proclubsnation.com",
                 icon_url="https://proclubsnation.com/wp-content/uploads/2020/08/PCN_logo_Best.png",
             )
-            if test_id is True:
+            if test_id:
                 results = collection.find({"discord_id": ctx.author.id})
                 for user in results:
                     embed.description = "You are already in the queue.  Please be patient while we process requests on a first-come, first-serve basis."
@@ -64,12 +64,13 @@ class Verification(commands.Cog):
                 tstamp = now.strftime(format)
                 post = {
                     "_id": ctx.author.id,
-                    "discord_name": ctx.author.name + "#" + ctx.author.discriminator,
+                    "discord_name": f"{ctx.author.name}#{ctx.author.discriminator}",
                     "gamertag": gamertag,
                     "status": "In Queue",
                     "reason": "New Application",
                     "updated": tstamp,
                 }
+
                 collection.insert_one(post)
                 embed.add_field(
                     name="Status",
@@ -93,11 +94,10 @@ class Verification(commands.Cog):
                 if applicant["status"] == "Denied":
                     _status = f"**Status:*** :no_entry:  **{applicant['status']}**"
                     _reason = applicant["reason"]
-                    _updated = applicant["updated"]
                 else:
                     _status = f"**Status**: :warning: **{applicant['status']}**"
                     _reason = f"**{applicant['reason']}**"
-                    _updated = applicant["updated"]
+                _updated = applicant["updated"]
             else:
                 print("Error")
             embed = discord.Embed(color=ctx.author.color)
@@ -152,7 +152,7 @@ class Verification(commands.Cog):
         try:
             await ctx.defer(ephemeral=True)
             member = discord.Guild.get_member(id)
-            _user = member.name + "#" + member.discriminator
+            _user = f"{member.name}#{member.discriminator}"
             now = datetime.datetime.now()
             tstamp = now.strftime(format)
 
@@ -186,7 +186,7 @@ class Verification(commands.Cog):
     async def deny(self, ctx, member: discord.Member, reason: str):
 
         await ctx.defer(ephemeral=True)
-        _user = member.name + "#" + member.discriminator
+        _user = f"{member.name}#{member.discriminator}"
         now = datetime.datetime.now()
         tstamp = now.strftime(format)
 
